@@ -37,35 +37,78 @@ const arrayTesti = document.getElementsByClassName("testi-foto");
 
 // inizializzoPrimaImmagine
 let indiceAttuale=0;
-    arrayImmaginiGrandi[indiceAttuale].classList.add("active");
-    arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
-    arrayTesti[indiceAttuale].classList.add("active");
+arrayImmaginiGrandi[indiceAttuale].classList.add("active");
+arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
+arrayTesti[indiceAttuale].classList.add("active");
 
 // Gestione bottoni
 const bottonePrecedente=document.querySelector(".precedente");
 const bottoneSuccessivo=document.querySelector(".successiva");
+const bottoneStart=document.querySelector(".start");
+const bottoneStop=document.querySelector(".stop");
+const bottoneInvertiScorrimento=document.querySelector(".bottone-autoplay-inverti");
 
-// Intervallo
+
+// Intervallo e Autoplay
 let intervalloImmagini;
+let autoplay = false;
+let autoplayVerso = "avanti";
+let IntervalloSecondi;
+let secondiTrascorsi = 3;
+const secondi = document.querySelector(".counter");
 
-slider();
+/**************************************************/
+// GESTIONE BOTTONI
+/**************************************************/
 
 // Bottone Successivo premuto
 bottoneSuccessivo.addEventListener("click", function(){
-    console.log("ciao");
     immagineSuccessiva();
     // RESETTO L'INTERVALLO
-    clearInterval(intervalloImmagini);
-    intervalloImmagini = setInterval(immagineSuccessiva, 3000);
+    if(autoplay === true){
+        slider();
+    }
 });
 
  //Bottone Precedente premuto
  bottonePrecedente.addEventListener("click", function(){
     immaginePrecedente();
     // RESETTO L'INTERVALLO
-    clearInterval(intervalloImmagini);
-    intervalloImmagini = setInterval(immaginePrecedente, 3000);
+    if(autoplay === true){
+        slider();
+    }
  });
+
+// Bottone START premuto
+bottoneStart.addEventListener("click", function(){
+    secondi.classList.add("display-inline");
+    if(autoplay === false){
+        clearInterval(intervalloImmagini);
+        slider();
+    }
+    autoplay = true;
+});
+// Bottone STOP premuto
+bottoneStop.addEventListener("click", function(){
+    secondi.classList.remove("display-inline");
+    autoplay = false;
+    // RESETTO L'INTERVALLO
+    clearInterval(intervalloImmagini);
+    clearInterval(IntervalloSecondi);
+});
+// Bottone INVERTI SCORRIMENTO premuto
+bottoneInvertiScorrimento.addEventListener("click", function(){
+    if(autoplay === true){
+        clearInterval(intervalloImmagini);
+        if(autoplayVerso === "avanti"){
+            sliderIndietro();
+            autoplayVerso = "indietro";
+        }else{
+            slider();
+            autoplayVerso = "avanti";
+        }
+    }
+});
 
 
  /*******************************************************/
@@ -97,6 +140,9 @@ function riempiImmagini(){
 
 // SLIDER
 function slider(){
+    secondiTrascorsi = 3;
+    clearInterval(IntervalloSecondi);
+    IntervalloSecondi=setInterval(counter, 1000);
     // TIMEOUT CHE SCORRE L'IMMAGINI IN AUTOMATICO
     intervalloImmagini = setInterval(immagineSuccessiva, 3000);
 
@@ -105,8 +151,33 @@ function slider(){
         clearInterval(intervalloImmagini);
     });
     contenitoreImmagineGrande.addEventListener("mouseout",function(){
+        clearInterval(intervalloImmagini);
         intervalloImmagini = setInterval(immagineSuccessiva, 3000);
     });
+}
+function sliderIndietro(){
+    secondiTrascorsi = 3;
+    clearInterval(IntervalloSecondi);
+    IntervalloSecondi=setInterval(counter,1000);
+    // TIMEOUT CHE SCORRE L'IMMAGINI IN AUTOMATICO
+    intervalloImmagini = setInterval(immaginePrecedente, 3000);
+
+    // Hover sull'immagine grande che blocca l'autoplay
+    contenitoreImmagineGrande.addEventListener("mouseover",function(){
+        clearInterval(intervalloImmagini);
+    });
+    contenitoreImmagineGrande.addEventListener("mouseout",function(){
+        clearInterval(intervalloImmagini);
+        intervalloImmagini = setInterval(immaginePrecedente, 3000);
+    });
+}
+function counter(){
+    if(secondiTrascorsi>1){
+        secondiTrascorsi --;
+    }else{
+        secondiTrascorsi = 3;
+    }
+    secondi.innerHTML = secondiTrascorsi;
 }
 
 // Va all'immagine successiva
