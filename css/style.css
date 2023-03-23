@@ -1,0 +1,82 @@
+/* RESET */
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+img{
+    width: 100%;
+}
+
+/* MAIN */
+.wrapper{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.container{
+    width: 100%;
+    height: 100%;
+    background-color: #1a1a1a;
+    padding: 5em;
+    display: flex;
+}
+.contenitore-immagine{
+    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 20%;
+    justify-content: space-between;
+}
+.contenitore-immagine img{
+    height: calc(100% / 5);
+}
+.contenitore-immagine-grande{
+    width: 80%;
+    cursor: pointer;
+}
+.contenitore-immagine-grande img{
+    min-height: 100%;
+}
+/* Bottoni */
+button{
+    background-color: #d1cad4;
+    border-style: none;
+    border-radius: 50%;
+    height: 30px;
+    width: 30px;
+    font-size: 1em;
+    margin: 1em 0em;
+    cursor: pointer;
+    z-index: 90;
+}
+.precedente, .successiva{
+    position: absolute;
+    align-self: center;
+}
+.precedente{
+    top: 0;
+}
+.successiva{
+    bottom: 0;
+}
+/* Immagini */
+.elemento-immagine{
+    display: none;
+}
+.elemento-immagine-a-lato{
+    filter: brightness(0.5);
+}
+.active{
+    display: block;
+}
+.elemento-immagine-lato-attivo{
+    border: 1px solid white;
+    filter: brightness(1);
+}
+.display-none{
+    display: none;
+}
