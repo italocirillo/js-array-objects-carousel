@@ -25,58 +25,34 @@ const images = [
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+// Inizializzo array di tutti i tag image
 const contenitoreImmagineGrande = document.querySelector(".contenitore-immagine-grande");
 const contenitoreImmagine = document.querySelector(".contenitore-immagine");
-
-// LOGICA
-// Ciclo for che crea le varie immagini grandi
-for(let i=0;i<arrayNomeImmagini.length;i++){
-    const Immagine = ` <img class="elemento-immagine" src="${arrayNomeImmagini[i]}" alt="img1"> `;
-    contenitoreImmagineGrande.innerHTML += Immagine;
-}
-// Ciclo for che crea le varie immagini piccole
-for(let i=0;i<arrayNomeImmagini.length;i++){
-    const Immagine = ` <img class="elemento-immagine-a-lato" src="${arrayNomeImmagini[i]}" alt="img1"> `;
-    contenitoreImmagine.innerHTML += Immagine;
-}
-// Inizializzo array di tutti i tag image
+riempiImmaginiGrandi();
+riempiImmagini();
 const arrayImmaginiGrandi = document.getElementsByClassName("elemento-immagine");
 const arrayImmagini = document.getElementsByClassName("elemento-immagine-a-lato");
-// Inizializzo la prima immagine
+const arrayTesti = document.getElementsByClassName("testi-foto");
+
+
+// inizializzoPrimaImmagine
 let indiceAttuale=0;
-arrayImmaginiGrandi[indiceAttuale].classList.add("active");
-arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
+    arrayImmaginiGrandi[indiceAttuale].classList.add("active");
+    arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
+    arrayTesti[indiceAttuale].classList.add("active");
 
 // Gestione bottoni
 const bottonePrecedente=document.querySelector(".precedente");
 const bottoneSuccessivo=document.querySelector(".successiva");
 
+// Intervallo
+let intervalloImmagini;
 
-// TIMEOUT CHE SCORRE L'IMMAGINI IN AUTOMATICO
-let intervalloImmagini = setInterval(immagineSuccessiva, 3000);
-
-// Hover sull'immagine grande che blocca l'autoplay
-contenitoreImmagineGrande.addEventListener("mouseover",function(){
-    clearInterval(intervalloImmagini);
-});
-contenitoreImmagineGrande.addEventListener("mouseout",function(){
-    intervalloImmagini = setInterval(immagineSuccessiva, 3000);
-});
+slider();
 
 // Bottone Successivo premuto
 bottoneSuccessivo.addEventListener("click", function(){
+    console.log("ciao");
     immagineSuccessiva();
     // RESETTO L'INTERVALLO
     clearInterval(intervalloImmagini);
@@ -86,16 +62,58 @@ bottoneSuccessivo.addEventListener("click", function(){
  //Bottone Precedente premuto
  bottonePrecedente.addEventListener("click", function(){
     immaginePrecedente();
+    // RESETTO L'INTERVALLO
+    clearInterval(intervalloImmagini);
+    intervalloImmagini = setInterval(immaginePrecedente, 3000);
  });
 
 
  /*******************************************************/
 //  FUNZIONI
 /********************************************************/
+// Creo elementi html aggiungendo immagini grandi
+function riempiImmaginiGrandi(){
+    let stringaImmagini = "";
+    // Ciclo che crea l'array immagini per poi riempire il contenitore con le varie immagini
+    const arrayImmaginiGrandi = images.map((element) => ` 
+    <img class="elemento-immagine" src="${element.image}" alt="img1"> 
+    <div class="testi-foto">
+        <h2>${element.title}</h2>
+        <p>${element.text}</p>
+    </div>
+    `);
+    arrayImmaginiGrandi.forEach(element => stringaImmagini += element);
+    contenitoreImmagineGrande.innerHTML += stringaImmagini;
+}
+
+// Creo elementi html aggiungendo immagini piccole
+function riempiImmagini(){
+    let stringaImmagini = "";
+    // Ciclo che crea l'array immagini per poi riempire il contenitore con le varie immagini
+    const arrayImmagini = images.map((element) => ` <img class="elemento-immagine-a-lato" src="${element.image}" alt="img1"> `);
+    arrayImmagini.forEach(element => stringaImmagini += element);
+    contenitoreImmagine.innerHTML += stringaImmagini;
+}
+
+// SLIDER
+function slider(){
+    // TIMEOUT CHE SCORRE L'IMMAGINI IN AUTOMATICO
+    intervalloImmagini = setInterval(immagineSuccessiva, 3000);
+
+    // Hover sull'immagine grande che blocca l'autoplay
+    contenitoreImmagineGrande.addEventListener("mouseover",function(){
+        clearInterval(intervalloImmagini);
+    });
+    contenitoreImmagineGrande.addEventListener("mouseout",function(){
+        intervalloImmagini = setInterval(immagineSuccessiva, 3000);
+    });
+}
+
 // Va all'immagine successiva
 function immagineSuccessiva(){
     arrayImmaginiGrandi[indiceAttuale].classList.remove("active");
     arrayImmagini[indiceAttuale].classList.remove("elemento-immagine-lato-attivo");
+    arrayTesti[indiceAttuale].classList.remove("active");
     // Controllo bottoni
     if(indiceAttuale === (arrayImmaginiGrandi.length-1)){
         indiceAttuale=0;
@@ -104,12 +122,14 @@ function immagineSuccessiva(){
     }
     arrayImmaginiGrandi[indiceAttuale].classList.add("active");
     arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
+    arrayTesti[indiceAttuale].classList.add("active");
 }
 
 // Va all'immagine precedente
 function immaginePrecedente(){
     arrayImmaginiGrandi[indiceAttuale].classList.remove("active");
     arrayImmagini[indiceAttuale].classList.remove("elemento-immagine-lato-attivo");
+    arrayTesti[indiceAttuale].classList.remove("active");
     // Controllo bottoni
     if(indiceAttuale === 0){
         indiceAttuale=arrayImmaginiGrandi.length-1;
@@ -118,4 +138,5 @@ function immaginePrecedente(){
     }
     arrayImmaginiGrandi[indiceAttuale].classList.add("active");
     arrayImmagini[indiceAttuale].classList.add("elemento-immagine-lato-attivo");
+    arrayTesti[indiceAttuale].classList.add("active");
 }
